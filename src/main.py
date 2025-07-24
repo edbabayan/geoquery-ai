@@ -1,30 +1,25 @@
+# Standard Libraries
+import os  # noqa: F401
+import pandas as pd  # noqa: F401
+
 # Loaders
 from langchain_community.document_loaders import PyMuPDFLoader, TextLoader
 from langchain_core.documents import Document
-from langchain.schema import Document
 
 # Text Splitters
 from langchain.text_splitter import CharacterTextSplitter, RecursiveCharacterTextSplitter
-
-# Embedding Support
-from langchain.vectorstores import FAISS
-from langchain.embeddings import OpenAIEmbeddings
-
-# Summarizer we'll use for Map Reduce
-from langchain.chains.summarize import load_summarize_chain
-from langchain_openai import ChatOpenAI
-
 from langchain_experimental.text_splitter import SemanticChunker
-# Splitters
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.vectorstores import FAISS
-from langchain_openai import OpenAIEmbeddings, AzureOpenAIEmbeddings
+
+# Embeddings
+from langchain_community.embeddings import OpenAIEmbeddings
+from langchain_openai import OpenAIEmbeddings as OpenAIEmbeddingsV2, AzureOpenAIEmbeddings
+
 # Vector Stores
-from langchain.vectorstores import Chroma, FAISS
-from langchain_community.vectorstores import Chroma
+from langchain_community.vectorstores import Chroma, FAISS
 
 # Retrievers
-from langchain.retrievers import BM25Retriever, EnsembleRetriever
+from langchain_community.retrievers import BM25Retriever
+from langchain.retrievers import EnsembleRetriever
 from langchain.retrievers.self_query.base import SelfQueryRetriever
 from langchain.retrievers.multi_vector import MultiVectorRetriever
 
