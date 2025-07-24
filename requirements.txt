@@ -4,3 +4,6 @@ langchain-core==0.3.72
 langchain-openai==0.3.28
 langchain-experimental==0.3.4
 numpy==2.3.1
+pandas==2.3.1
+openpyxl==3.1.5
+dotenv==0.9.9
