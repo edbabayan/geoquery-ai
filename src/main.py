@@ -108,14 +108,14 @@ for i in df.index:
 
 description_strings_questions = []
 for i in df.index:
-    matching_questions = [k["questions"] for k in result if table_description_list_default[i].metadata['table_name'] == k["table"]]
+    matching_questions = [k["questions"] for k in result if table_description_list_default[i]['table_name'].split('.')[-1] == k["table"]]
     questions_text = ' '.join(matching_questions[0]) if matching_questions else ""
     description_strings_questions.append(f"Table name is {df.loc[i, 'name']}. Industry terms are {df.loc[i, 'industry_terms']}. Data granularity is {df.loc[i, 'data_granularity']}. Main business purpose is {df.loc[i, 'main_business_purpose']}. Alternative business purpose is {df.loc[i, 'alternative_business_purpose']}. Unique insights are {df.loc[i, 'unique_insights']}. Question examples are: {questions_text}")
 
 
 description_strings_questions_v2 = []
 for i in df.index:
-    matching_questions = [k["questions"] for k in result if table_description_list_default[i].metadata['table_name'] == k["table"]]
+    matching_questions = [k["questions"] for k in result if table_description_list_default[i]['table_name'].split('.')[-1] == k["table"]]
     questions_text = ' '.join(matching_questions[0]) if matching_questions else ""
     description_strings_questions_v2.append(f"Table name is {df.loc[i, 'name']}. Main business purpose is {df.loc[i, 
     'main_business_purpose']}. Unique insights are {df.loc[i, 'unique_insights']}. Question examples are: {questions_text}")
@@ -123,7 +123,7 @@ for i in df.index:
 
 description_strings_questions_v3 = []
 for i in df.index:
-    matching_questions = [k["questions"] for k in result if table_description_list_default[i].metadata['table_name'] == k["table"]]
+    matching_questions = [k["questions"] for k in result if table_description_list_default[i]['table_name'].split('.')[-1] == k["table"]]
     description_strings_questions_v3.append(f"Table name is {df.loc[i, 'name']}. Industry terms are {df.loc[i,
     'industry_terms']}. Data granularity is {df.loc[i, 'data_granularity']}. Main business purpose is {df.loc[i, 'main_business_purpose']}. Alternative business purpose is {df.loc[i, 'alternative_business_purpose']}. Unique insights are {df.loc[i, 'unique_insights']}.")
 
@@ -150,7 +150,9 @@ def create_ensemble_retriever_from_documents(documents, num_docs_retrieved=5, we
 
 retriever_artem_v1 = create_ensemble_retriever_from_documents(documents_artem_description, name="artem_v1")
 retriever_artem_v2 = create_ensemble_retriever_from_documents(documents_artem_v2_description, name="artem_v2")
-retriever_default = create_ensemble_retriever_from_documents(table_description_list_default, name="default_v1")
+# Create documents from table_description_list_default with proper formatting
+default_documents = [Document(page_content=f"Table name is {table_info['table_name'].split('.')[-1]}. Description: {table_info['table_description']}", metadata={"table_name": table_info['table_name'].split('.')[-1]}) for table_info in table_description_list_default]
+retriever_default = create_ensemble_retriever_from_documents(default_documents, name="default_v1")
 retriever_artem_v3 = create_ensemble_retriever_from_documents(documents_artem_v3_description, name="artem_v3")
 
 query = "Can you plot the wellhead pressure vs. time for the top 5 producing wells over the last 30 days?"
@@ -163,7 +165,7 @@ retriever_artem_v3.invoke(query)
 
 description_strings_questions_v4 = []
 for i in df.index:
-    matching_questions = [k["questions"] for k in result if table_description_list_default[i].metadata['table_name'] == k["table"]]
+    matching_questions = [k["questions"] for k in result if table_description_list_default[i]['table_name'].split('.')[-1] == k["table"]]
     questions_text = ' '.join(matching_questions[0]) if matching_questions else ""
     description_strings_questions_v4.append(f"Table name is {df.loc[i, 'name']}. Main business purpose is {df.loc[i, 'main_business_purpose']} Unique insights are {df.loc[i, 'unique_insights']}")
 
