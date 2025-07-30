@@ -25,29 +25,32 @@ def prepare_enhanced_documents():
     except:
         result_full = {}
     
-    for i in df.index:
-        table_name = df.loc[i, "name"]
+    # Use the default descriptions with full table names
+    for table_info in table_description_list_default:
+        full_table_name = table_info["table_name"]
+        table_description = table_info["table_description"]
         
-        # Get example questions for this table
-        questions = result_full.get(table_name, [])
+        # Extract just the table name (last part after dot)
+        short_table_name = full_table_name.split(".")[-1]
+        
+        # Get example questions for this table if available
+        questions = result_full.get(full_table_name, [])
         questions_text = ' '.join(questions[:5]) if questions else ""
         
         # Create comprehensive description
         description = (
-            f"Table name is {table_name}. "
-            f"Industry terms are {df.loc[i, 'industry_terms']}. "
-            f"Data granularity is {df.loc[i, 'data_granularity']}. "
-            f"Main business purpose is {df.loc[i, 'main_business_purpose']}. "
-            f"Alternative business purpose is {df.loc[i, 'alternative_business_purpose']}. "
-            f"Unique insights are {df.loc[i, 'unique_insights']}. "
+            f"Table name is {short_table_name}. "
+            f"Description: {table_description} "
             f"Example questions: {questions_text}"
         )
         
         doc = Document(
             page_content=description,
-            metadata={"table_name": table_name.split(".")[-1]}
+            metadata={"table_name": short_table_name}
         )
         documents.append(doc)
+    
+    print(f"Created {len(documents)} documents with table names: {[doc.metadata['table_name'] for doc in documents]}")
     
     return documents
 
@@ -147,7 +150,14 @@ def test_with_ground_truth():
         print(f"Retrieved tables: {retrieved_tables}")
         
         # Check if expected tables are in results
-        matches = [table for table in expected_tables if any(table in ret for ret in retrieved_tables)]
+        # Handle case sensitivity and partial matches
+        matches = []
+        for expected in expected_tables:
+            expected_clean = expected.strip().lower()
+            for retrieved in retrieved_tables:
+                if expected_clean == retrieved.lower():
+                    matches.append(expected)
+                    break
         print(f"Matches: {matches} ({len(matches)}/{len(expected_tables)})")
 
 if __name__ == "__main__":
