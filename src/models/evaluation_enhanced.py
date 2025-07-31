@@ -6,6 +6,7 @@ from enhanced_retrieval_models import retriever_enhanced, ground_truth_renamed
 from retrieval_models import retriever_default, retriever_artem_v1, retriever_artem_v2, retriever_artem_v3
 from advanced_retrieval_models import retriever_advanced_reranked, retriever_advanced_no_rerank
 from query_decomposition import default_composition
+from default_with_reranker import retriever_default_with_reranker
 from src.recomendation_functions.rag_with_mrr import evaluate_rag_with_mrr
 import pandas as pd
 import time
@@ -39,6 +40,7 @@ retriever_default_with_decomposition = default_composition(retriever_default)
 models = [
     ("Default Retriever", retriever_default),
     ("Default Retriever with Decomposition", retriever_default_with_decomposition),
+    ("Default Retriever with Reranker", retriever_default_with_reranker),
     ("Artem V1 Retriever", retriever_artem_v1),
     ("Artem V2 Retriever", retriever_artem_v2),
     ("Artem V3 Retriever", retriever_artem_v3),
