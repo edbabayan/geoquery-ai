@@ -1,4 +1,5 @@
 from typing import Any, Dict, List
+from tqdm import tqdm
 
 from src.recomendation_functions.mean_reciprocal_rank import calculate_mrr
 
@@ -19,7 +20,7 @@ def evaluate_rag_with_mrr(rag_system, test_queries: List[str],
     """
     all_predictions = []
 
-    for query in test_queries:
+    for query in tqdm(test_queries, desc="Processing queries", unit="query"):
         # Get top-k predictions from your RAG system using invoke
         retrieved_docs = rag_system.invoke(query)[:top_k]
         # Extract table names from retrieved documents

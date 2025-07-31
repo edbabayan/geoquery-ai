@@ -162,7 +162,6 @@ retriever_artem_v2.invoke(query)
 retriever_default.invoke(query)
 retriever_artem_v3.invoke(query)
 
-
 description_strings_questions_v4 = []
 for i in df.index:
     matching_questions = [k["questions"] for k in result if table_description_list_default[i]['table_name'].split('.')[-1] == k["table"]]
