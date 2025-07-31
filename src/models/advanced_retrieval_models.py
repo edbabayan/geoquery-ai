@@ -1,5 +1,5 @@
 """
-Advanced retrieval models with enhanced metadata and hybrid approaches
+Advanced retrieval models with enhanced metadata using column descriptions and hybrid optimization
 """
 
 from typing import List
@@ -18,6 +18,7 @@ from dotenv import load_dotenv
 # Add parent directory to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from config import CFG
+from generate_table_metadata import generate_table_metadata_enhanced, load_metadata_from_file, save_metadata_to_file
 
 # Load environment variables
 load_dotenv(CFG.env_file)
@@ -31,108 +32,6 @@ ground_truth_renamed = ground_truth.rename(columns={
     'NL_QUERY': 'question',
     'TABLES': 'tables'
 })
-
-# Enhanced table metadata with relationships and query patterns
-table_metadata_enhanced = {
-    "daily_allocation": {
-        "key_columns": ["UWI", "PRODUCTION_DATE", "MATERIAL_TYPE", "FLOW_DIRECTION"],
-        "relationships": ["joins with well_reservoir via UWI", "connects to well via UWI"],
-        "common_queries": ["production volumes by date", "top producing wells", "injection vs production analysis"],
-        "temporal_granularity": "daily",
-        "query_keywords": ["production", "volume", "allocation", "daily", "oil", "gas", "water", "ESP", "gas-lift"]
-    },
-    "inactive_string": {
-        "key_columns": ["UWI", "STRING_NAME", "STRING_STATUS", "INACTIVE_CATEGORY"],
-        "relationships": ["joins with string via UWI and STRING_NAME", "relates to well"],
-        "common_queries": ["downtime analysis", "inactive well reasons", "string health status"],
-        "temporal_granularity": "monthly",
-        "query_keywords": ["inactive", "downtime", "abandoned", "problematic", "health status"]
-    },
-    "real_time_corporate_pi": {
-        "key_columns": ["UWI", "TAG_NAME", "TIMESTAMP", "VALUE"],
-        "relationships": ["joins with well via UWI", "time-series data for wells"],
-        "common_queries": ["pressure trends", "temperature monitoring", "real-time sensor data", "valve status"],
-        "temporal_granularity": "real-time/hourly",
-        "query_keywords": ["pressure", "temperature", "real-time", "sensor", "choke", "valve", "trend", "monitoring"]
-    },
-    "well_reservoir": {
-        "key_columns": ["UWI", "STRING_NAME", "RESERVOIR_NAME", "FIELD_NAME"],
-        "relationships": ["master mapping table", "joins with all well-related tables"],
-        "common_queries": ["well to reservoir mapping", "field/reservoir lookup"],
-        "temporal_granularity": "static",
-        "query_keywords": ["reservoir", "field", "mapping", "string designation", "LS", "SS", "ST/TB"]
-    },
-    "string": {
-        "key_columns": ["UWI", "STRING_NAME", "RESERVOIR_NAME", "FIELD_NAME"],
-        "relationships": ["duplicate of well_reservoir", "joins with string_event"],
-        "common_queries": ["string identification", "well-string relationships"],
-        "temporal_granularity": "static",
-        "query_keywords": ["string", "LS", "SS", "mapping"]
-    },
-    "string_event": {
-        "key_columns": ["UWI", "STRING_NAME", "EVENT_DATE", "STRING_STATUS"],
-        "relationships": ["joins with string/well_reservoir", "event history for strings"],
-        "common_queries": ["operational status changes", "event history", "flow status analysis"],
-        "temporal_granularity": "event-based",
-        "query_keywords": ["event", "status", "flowing", "down", "injecting", "choke size", "flow rate"]
-    },
-    "unified_pressure_test": {
-        "key_columns": ["UWI", "TEST_DATE", "TEST_TYPE", "RESERVOIR_PRESSURE"],
-        "relationships": ["joins with well via UWI", "pressure data for reservoirs"],
-        "common_queries": ["pressure test results", "BHP analysis", "productivity index"],
-        "temporal_granularity": "test dates",
-        "query_keywords": ["pressure test", "BHCIP", "PBU", "BHP", "permeability", "productivity"]
-    },
-    "well": {
-        "key_columns": ["UWI", "WELL_NAME", "WELL_TYPE", "FIELD_NAME"],
-        "relationships": ["master well table", "joins with all well-specific tables"],
-        "common_queries": ["well information", "producer/injector lookup", "well locations"],
-        "temporal_granularity": "static with status updates",
-        "query_keywords": ["well", "producer", "injector", "observer", "coordinates", "status", "operator"]
-    },
-    "well_completion": {
-        "key_columns": ["UWI", "COMPLETION_TYPE", "INSTALLATION_DATE"],
-        "relationships": ["joins with well via UWI", "equipment specifications"],
-        "common_queries": ["completion equipment", "downhole components", "installation dates"],
-        "temporal_granularity": "installation/removal dates",
-        "query_keywords": ["completion", "equipment", "downhole", "OD", "ID", "installation"]
-    },
-    "well_log_index": {
-        "key_columns": ["UWI", "SERVICE_TYPE", "LOG_DATE", "DEPTH_FROM", "DEPTH_TO"],
-        "relationships": ["joins with well via UWI", "logging service history"],
-        "common_queries": ["logging services", "formation analysis", "mud properties"],
-        "temporal_granularity": "service dates",
-        "query_keywords": ["log", "GR", "PLT", "RST", "formation", "mud", "service"]
-    },
-    "wellbore": {
-        "key_columns": ["UWI", "BORE_NAME", "SPUD_DATE", "TOTAL_DEPTH"],
-        "relationships": ["joins with well via UWI", "drilling information"],
-        "common_queries": ["drilling metrics", "bore details", "geological targets"],
-        "temporal_granularity": "drilling dates",
-        "query_keywords": ["wellbore", "drilling", "bore", "depth", "spud", "rig", "formation"]
-    },
-    "well_allowable_limits": {
-        "key_columns": ["UWI", "MATERIAL_TYPE", "ALLOWABLE_RATE", "TECHNICAL_RATE"],
-        "relationships": ["joins with well via UWI", "production constraints"],
-        "common_queries": ["production limits", "allowable rates", "technical capacity"],
-        "temporal_granularity": "monthly updates",
-        "query_keywords": ["allowable", "limit", "rate", "technical", "constraint", "capacity"]
-    },
-    "field": {
-        "key_columns": ["FIELD_CODE", "FIELD_NAME", "COMPANY_CODE"],
-        "relationships": ["master field table", "referenced by all tables with field data"],
-        "common_queries": ["field lookup", "company associations"],
-        "temporal_granularity": "static",
-        "query_keywords": ["field", "company", "project", "code"]
-    },
-    "flow_test": {
-        "key_columns": ["UWI", "TEST_DATE", "TEST_TYPE", "OIL_RATE", "GAS_RATE", "WATER_RATE"],
-        "relationships": ["joins with well via UWI", "test results by string"],
-        "common_queries": ["flow test results", "production rates", "well performance"],
-        "temporal_granularity": "test dates",
-        "query_keywords": ["flow test", "rate", "choke", "wellhead pressure", "temperature", "performance"]
-    }
-}
 
 # Table descriptions from original list
 table_description_list_default = [
@@ -194,14 +93,29 @@ table_description_list_default = [
     }
 ]
 
+# Load or generate enhanced metadata with column descriptions
+print("Loading enhanced table metadata...")
+# Try to load hybrid metadata first, fall back to generated
+table_metadata_enhanced = load_metadata_from_file("hybrid_table_metadata.json")
+
+if table_metadata_enhanced is None:
+    table_metadata_enhanced = load_metadata_from_file("generated_table_metadata.json")
+    
+if table_metadata_enhanced is None:
+    print("No existing metadata found. Generating new metadata...")
+    table_metadata_enhanced = generate_table_metadata_enhanced()
+    save_metadata_to_file(table_metadata_enhanced)
+else:
+    print("Loaded existing metadata from file.")
+
 # Create advanced descriptions with all metadata
 advanced_descriptions = []
 for i in range(min(len(df), len(table_description_list_default))):
     table_info = table_description_list_default[i]
     table_short_name = table_info['table_name'].split('.')[-1]
     
-    # Get enhanced metadata
-    metadata = table_metadata_enhanced.get(table_short_name, {})
+    # Get enhanced metadata with safe access
+    metadata = table_metadata_enhanced.get(table_short_name, {}) if table_metadata_enhanced else {}
     
     # Build comprehensive description
     advanced_desc = f"""
@@ -235,10 +149,10 @@ documents_advanced = [
             "full_table_name": table_description_list_default[i]["table_name"],
             "temporal_granularity": table_metadata_enhanced.get(
                 table_description_list_default[i]["table_name"].split(".")[-1], {}
-            ).get('temporal_granularity', 'varies'),
+            ).get('temporal_granularity', 'varies') if table_metadata_enhanced else 'varies',
             "key_columns": ', '.join(table_metadata_enhanced.get(
                 table_description_list_default[i]["table_name"].split(".")[-1], {}
-            ).get('key_columns', []))
+            ).get('key_columns', [])) if table_metadata_enhanced else ''
         }
     ) 
     for i, desc in enumerate(advanced_descriptions)
@@ -284,5 +198,5 @@ retriever_advanced_no_rerank = EnsembleRetriever(
     weights=[0.6, 0.4]
 )
 
-# Export for evaluation
+# Export for evaluation (maintaining backward compatibility)
 __all__ = ['retriever_advanced_reranked', 'retriever_advanced_no_rerank', 'ground_truth_renamed']
