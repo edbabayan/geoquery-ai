@@ -4,6 +4,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from enhanced_retrieval_models import retriever_enhanced, ground_truth_renamed
 from retrieval_models import retriever_default, retriever_artem_v1, retriever_artem_v2, retriever_artem_v3
+from advanced_retrieval_models import retriever_advanced_reranked, retriever_advanced_no_rerank
 from src.recomendation_functions.rag_with_mrr import evaluate_rag_with_mrr
 import pandas as pd
 import time
@@ -20,7 +21,9 @@ models = [
     ("Artem V1 Retriever", retriever_artem_v1),
     ("Artem V2 Retriever", retriever_artem_v2),
     ("Artem V3 Retriever", retriever_artem_v3),
-    ("Enhanced Retriever", retriever_enhanced)
+    ("Enhanced Retriever", retriever_enhanced),
+    ("Advanced Retriever (No Rerank)", retriever_advanced_no_rerank),
+    ("Advanced Retriever (With Rerank)", retriever_advanced_reranked)
 ]
 
 print(f"Evaluating {len(models)} retrieval models on {len(test_queries)} queries...\n")
