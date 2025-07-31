@@ -1,6 +1,6 @@
 from typing import Any, Dict, List
 
-from mean_reciprocal_rank import calculate_mrr
+from src.recomendation_functions.mean_reciprocal_rank import calculate_mrr
 
 
 def evaluate_rag_with_mrr(rag_system, test_queries: List[str],
@@ -9,9 +9,9 @@ def evaluate_rag_with_mrr(rag_system, test_queries: List[str],
     Evaluate RAG system using MRR metric
 
     Args:
-        rag_system: Your RAG system with a query method
+        rag_system: Your RAG system with an invoke method
         test_queries: List of test questions
-        ground_truth: List of expected answers
+        ground_truth: List of expected answers (table names)
         top_k: Number of top predictions to consider
 
     Returns:
@@ -20,9 +20,10 @@ def evaluate_rag_with_mrr(rag_system, test_queries: List[str],
     all_predictions = []
 
     for query in test_queries:
-        # Get top-k predictions from your RAG system
-        # Adjust this based on your RAG system's API
-        predictions = rag_system.query(query, top_k=top_k)
+        # Get top-k predictions from your RAG system using invoke
+        retrieved_docs = rag_system.invoke(query)[:top_k]
+        # Extract table names from retrieved documents
+        predictions = [doc.metadata.get('table_name', '') for doc in retrieved_docs]
         all_predictions.append(predictions)
 
     mrr_score = calculate_mrr(all_predictions, ground_truth)
