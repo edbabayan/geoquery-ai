@@ -5,9 +5,10 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from enhanced_retrieval_models import retriever_enhanced, ground_truth_renamed
 from retrieval_models import retriever_default, retriever_artem_v1, retriever_artem_v2, retriever_artem_v3
 from advanced_retrieval_models import retriever_advanced_reranked, retriever_advanced_no_rerank
+from advanced_retrieval_models_v2 import retriever_advanced_v2_reranked, retriever_advanced_v2_no_rerank
 from query_decomposition import default_composition
 from default_with_reranker import retriever_default_with_reranker
-from src.recomendation_functions.rag_with_mrr import evaluate_rag_with_mrr
+from recomendation_functions.rag_with_mrr import evaluate_rag_with_mrr
 import pandas as pd
 import time
 from tqdm import tqdm
@@ -46,7 +47,9 @@ models = [
     ("Artem V3 Retriever", retriever_artem_v3),
     ("Enhanced Retriever", retriever_enhanced),
     ("Advanced Retriever (No Rerank)", retriever_advanced_no_rerank),
-    ("Advanced Retriever (With Rerank)", retriever_advanced_reranked)
+    ("Advanced Retriever (With Rerank)", retriever_advanced_reranked),
+    ("Advanced V2 Auto-Generated (No Rerank)", retriever_advanced_v2_no_rerank),
+    ("Advanced V2 Auto-Generated (With Rerank)", retriever_advanced_v2_reranked)
 ]
 
 # Load existing results

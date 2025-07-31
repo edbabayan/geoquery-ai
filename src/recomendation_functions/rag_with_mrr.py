@@ -1,7 +1,7 @@
 from typing import Any, Dict, List
 from tqdm import tqdm
 
-from src.recomendation_functions.mean_reciprocal_rank import calculate_mrr
+from .mean_reciprocal_rank import calculate_mrr
 
 
 def evaluate_rag_with_mrr(rag_system, test_queries: List[str],
