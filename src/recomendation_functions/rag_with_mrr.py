@@ -1,7 +1,7 @@
 from typing import Any, Dict, List
 from tqdm import tqdm
 
-from .mean_reciprocal_rank import calculate_mrr
+from .mean_reciprocal_rank import calculate_mrr, calculate_accuracy
 
 
 def evaluate_rag_with_mrr(rag_system, test_queries: List[str],
@@ -28,9 +28,11 @@ def evaluate_rag_with_mrr(rag_system, test_queries: List[str],
         all_predictions.append(predictions)
 
     mrr_score = calculate_mrr(all_predictions, ground_truth)
+    accuracy_score = calculate_accuracy(all_predictions, ground_truth)
 
     return {
         'mrr_score': mrr_score,
+        'accuracy_score': accuracy_score,
         'predictions': all_predictions,
         'ground_truth': ground_truth,
         'num_queries': len(test_queries)
