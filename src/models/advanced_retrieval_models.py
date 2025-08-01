@@ -173,7 +173,7 @@ vector_retriever_advanced = vectorstore_advanced.as_retriever(search_kwargs={"k"
 # Higher BM25 weight for keyword matching given the rich metadata
 ensemble_retriever_advanced = EnsembleRetriever(
     retrievers=[bm25_retriever_advanced, vector_retriever_advanced], 
-    weights=[0.6, 0.4]  # Favor BM25 for keyword-rich queries
+    weights=[0.3, 0.7]  # Favor BM25 for keyword-rich queries
 )
 
 # Initialize cross-encoder for reranking
