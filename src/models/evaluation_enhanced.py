@@ -13,6 +13,7 @@ import pandas as pd
 import time
 from tqdm import tqdm
 
+
 # Load existing results to check for evaluated models
 RESULTS_FILE = 'retriever_evaluation_results.xlsx'
 
@@ -21,7 +22,7 @@ def load_existing_results():
     try:
         return pd.read_excel(RESULTS_FILE)
     except FileNotFoundError:
-        return pd.DataFrame(columns=['Model Name', 'MRR Score', 'Evaluation Time (seconds)'])
+        return pd.DataFrame(columns=['Model Name', 'MRR Score', 'Accuracy Score', 'Evaluation Time (seconds)'])
 
 
 def model_already_evaluated(model_name, existing_df):
@@ -75,14 +76,17 @@ for model_name, model in models:
     
     eval_time = end_time - start_time
     mrr_score = evaluation['mrr_score']
+    accuracy_score = evaluation['accuracy_score']
     
     results.append({
         'Model Name': model_name,
         'MRR Score': mrr_score,
+        'Accuracy Score': accuracy_score,
         'Evaluation Time (seconds)': eval_time
     })
     
     print(f"MRR Score: {mrr_score:.3f}")
+    print(f"Accuracy Score: {accuracy_score:.3f}")
     print(f"Evaluation Time: {eval_time:.2f} seconds\n")
 
 # Save to Excel (combining existing and new results)
