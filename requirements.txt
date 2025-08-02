@@ -1,0 +1,13 @@
+langchain==0.3.26
+langchain-community==0.3.27
+langchain-core==0.3.72
+langchain-openai==0.3.28
+langchain-experimental==0.3.4
+numpy==2.3.1
+pandas==2.3.1
+openpyxl==3.1.5
+python-dotenv==1.0.0
+sentence-transformers>=2.2.0
+torch>=2.0.0
+rank_bm25
+chromadb
