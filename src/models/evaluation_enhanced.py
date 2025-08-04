@@ -7,6 +7,8 @@ from retrieval_models import retriever_default, retriever_artem_v1, retriever_ar
 from advanced_retrieval_models import retriever_advanced_reranked, retriever_advanced_no_rerank
 # from advanced_retrieval_models_v2 import retriever_advanced_v2_reranked, retriever_advanced_v2_no_rerank
 from column_enhanced_retrieval_models import retriever_columns_basic, retriever_columns_bm25_emphasis, retriever_columns_vector_emphasis, retriever_columns_reranked
+from default_with_columns_retrieval import retriever_default_with_columns_bm25, retriever_default_with_columns_balanced, retriever_default_with_columns_vector
+from advanced_with_columns_retrieval import retriever_advanced_with_columns_reranked, retriever_advanced_with_columns_no_rerank
 from query_decomposition import default_composition
 from default_with_reranker import retriever_default_with_reranker
 from recomendation_functions.rag_with_mrr import evaluate_rag_with_mrr
@@ -55,6 +57,13 @@ models = [
     ("Column Enhanced BM25 Emphasis", retriever_columns_bm25_emphasis),
     ("Column Enhanced Vector Emphasis", retriever_columns_vector_emphasis),
     ("Column Enhanced with Reranking", retriever_columns_reranked),
+    # Default with columns models
+    ("Default with Columns (BM25 0.7-0.3)", retriever_default_with_columns_bm25),
+    ("Default with Columns (Balanced 0.5-0.5)", retriever_default_with_columns_balanced),
+    ("Default with Columns (Vector 0.3-0.7)", retriever_default_with_columns_vector),
+    # Advanced with columns models
+    ("Advanced with Columns (No Rerank)", retriever_advanced_with_columns_no_rerank),
+    ("Advanced with Columns (With Rerank)", retriever_advanced_with_columns_reranked),
 ]
 
 # Load existing results
