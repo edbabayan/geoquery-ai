@@ -6,6 +6,7 @@ from enhanced_retrieval_models import retriever_enhanced, ground_truth_renamed
 from retrieval_models import retriever_default, retriever_artem_v1, retriever_artem_v2, retriever_artem_v3
 from advanced_retrieval_models import retriever_advanced_reranked, retriever_advanced_no_rerank
 # from advanced_retrieval_models_v2 import retriever_advanced_v2_reranked, retriever_advanced_v2_no_rerank
+from column_enhanced_retrieval_models import retriever_columns_basic, retriever_columns_bm25_emphasis, retriever_columns_vector_emphasis, retriever_columns_reranked
 from query_decomposition import default_composition
 from default_with_reranker import retriever_default_with_reranker
 from recomendation_functions.rag_with_mrr import evaluate_rag_with_mrr
@@ -49,8 +50,11 @@ models = [
     ("Enhanced Retriever", retriever_enhanced),
     ("Advanced Retriever (No Rerank)", retriever_advanced_no_rerank),
     ("Advanced Retriever (With Rerank)", retriever_advanced_reranked),
-    # ("Advanced V2 Auto-Generated (No Rerank)", retriever_advanced_v2_no_rerank),
-    # ("Advanced V2 Auto-Generated (With Rerank)", retriever_advanced_v2_reranked)
+    # Column-enhanced models
+    ("Column Enhanced Basic", retriever_columns_basic),
+    ("Column Enhanced BM25 Emphasis", retriever_columns_bm25_emphasis),
+    ("Column Enhanced Vector Emphasis", retriever_columns_vector_emphasis),
+    ("Column Enhanced with Reranking", retriever_columns_reranked),
 ]
 
 # Load existing results
