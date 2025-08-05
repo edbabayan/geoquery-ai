@@ -6,8 +6,29 @@ from enhanced_retrieval_models import retriever_enhanced, ground_truth_renamed
 from retrieval_models import retriever_default, retriever_artem_v1, retriever_artem_v2, retriever_artem_v3
 from advanced_retrieval_models import retriever_advanced_reranked, retriever_advanced_no_rerank
 # from advanced_retrieval_models_v2 import retriever_advanced_v2_reranked, retriever_advanced_v2_no_rerank
+from column_enhanced_retrieval_models import retriever_columns_basic, retriever_columns_bm25_emphasis, retriever_columns_vector_emphasis, retriever_columns_reranked
+from default_with_columns_retrieval import retriever_default_with_columns_bm25, retriever_default_with_columns_balanced, retriever_default_with_columns_vector
+from advanced_with_columns_retrieval import retriever_advanced_with_columns_reranked, retriever_advanced_with_columns_no_rerank
 from query_decomposition import default_composition
 from default_with_reranker import retriever_default_with_reranker
+from knowledge_graph_retrieval_models import retriever_kg_basic, retriever_kg_gpt4, retriever_kg_enhanced
+from questions_enhanced_retrieval import (
+    retriever_default_questions_balanced,
+    retriever_default_questions_bm25,
+    retriever_default_questions_vector,
+    retriever_default_columns_questions_balanced,
+    retriever_default_columns_questions_bm25,
+    retriever_default_columns_questions_vector
+)
+from graph_retrieval_variations import (
+    retriever_kg_default,
+    retriever_kg_artem_v1,
+    retriever_kg_artem_v2,
+    retriever_kg_artem_v3,
+    retriever_kg_artem_v4,
+    retriever_kg_default_bm25,
+    retriever_kg_default_vector
+)
 from recomendation_functions.rag_with_mrr import evaluate_rag_with_mrr
 import pandas as pd
 import time
@@ -49,8 +70,38 @@ models = [
     ("Enhanced Retriever", retriever_enhanced),
     ("Advanced Retriever (No Rerank)", retriever_advanced_no_rerank),
     ("Advanced Retriever (With Rerank)", retriever_advanced_reranked),
-    # ("Advanced V2 Auto-Generated (No Rerank)", retriever_advanced_v2_no_rerank),
-    # ("Advanced V2 Auto-Generated (With Rerank)", retriever_advanced_v2_reranked)
+    # Column-enhanced models
+    ("Column Enhanced Basic", retriever_columns_basic),
+    ("Column Enhanced BM25 Emphasis", retriever_columns_bm25_emphasis),
+    ("Column Enhanced Vector Emphasis", retriever_columns_vector_emphasis),
+    ("Column Enhanced with Reranking", retriever_columns_reranked),
+    # Default with columns models
+    ("Default with Columns (BM25 0.7-0.3)", retriever_default_with_columns_bm25),
+    ("Default with Columns (Balanced 0.5-0.5)", retriever_default_with_columns_balanced),
+    ("Default with Columns (Vector 0.3-0.7)", retriever_default_with_columns_vector),
+    # Advanced with columns models
+    ("Advanced with Columns (No Rerank)", retriever_advanced_with_columns_no_rerank),
+    ("Advanced with Columns (With Rerank)", retriever_advanced_with_columns_reranked),
+    # Knowledge Graph models
+    ("Knowledge Graph Basic", retriever_kg_basic),
+    ("Knowledge Graph GPT-4", retriever_kg_gpt4),
+    ("Knowledge Graph Enhanced", retriever_kg_enhanced),
+    # Default + Questions models
+    ("Default + Questions (Balanced 0.5-0.5)", retriever_default_questions_balanced),
+    ("Default + Questions (BM25 0.7-0.3)", retriever_default_questions_bm25),
+    ("Default + Questions (Vector 0.3-0.7)", retriever_default_questions_vector),
+    # Default + Columns + Questions models
+    ("Default + Columns + Questions (Balanced 0.5-0.5)", retriever_default_columns_questions_balanced),
+    ("Default + Columns + Questions (BM25 0.7-0.3)", retriever_default_columns_questions_bm25),
+    ("Default + Columns + Questions (Vector 0.3-0.7)", retriever_default_columns_questions_vector),
+    # Graph-based variations matching original retrievers
+    ("KG Default (Balanced 0.5-0.5)", retriever_kg_default),
+    ("KG Artem V1 Full (Balanced 0.5-0.5)", retriever_kg_artem_v1),
+    ("KG Artem V2 Purpose+Insights (Balanced 0.5-0.5)", retriever_kg_artem_v2),
+    ("KG Artem V3 Full (Balanced 0.5-0.5)", retriever_kg_artem_v3),
+    ("KG Artem V4 Minimal (Balanced 0.5-0.5)", retriever_kg_artem_v4),
+    ("KG Default (BM25 0.7-0.3)", retriever_kg_default_bm25),
+    ("KG Default (Vector 0.3-0.7)", retriever_kg_default_vector),
 ]
 
 # Load existing results
