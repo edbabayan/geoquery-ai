@@ -20,6 +20,15 @@ from questions_enhanced_retrieval import (
     retriever_default_columns_questions_bm25,
     retriever_default_columns_questions_vector
 )
+from graph_retrieval_variations import (
+    retriever_kg_default,
+    retriever_kg_artem_v1,
+    retriever_kg_artem_v2,
+    retriever_kg_artem_v3,
+    retriever_kg_artem_v4,
+    retriever_kg_default_bm25,
+    retriever_kg_default_vector
+)
 from recomendation_functions.rag_with_mrr import evaluate_rag_with_mrr
 import pandas as pd
 import time
@@ -85,6 +94,14 @@ models = [
     ("Default + Columns + Questions (Balanced 0.5-0.5)", retriever_default_columns_questions_balanced),
     ("Default + Columns + Questions (BM25 0.7-0.3)", retriever_default_columns_questions_bm25),
     ("Default + Columns + Questions (Vector 0.3-0.7)", retriever_default_columns_questions_vector),
+    # Graph-based variations matching original retrievers
+    ("KG Default (Balanced 0.5-0.5)", retriever_kg_default),
+    ("KG Artem V1 Full (Balanced 0.5-0.5)", retriever_kg_artem_v1),
+    ("KG Artem V2 Purpose+Insights (Balanced 0.5-0.5)", retriever_kg_artem_v2),
+    ("KG Artem V3 Full (Balanced 0.5-0.5)", retriever_kg_artem_v3),
+    ("KG Artem V4 Minimal (Balanced 0.5-0.5)", retriever_kg_artem_v4),
+    ("KG Default (BM25 0.7-0.3)", retriever_kg_default_bm25),
+    ("KG Default (Vector 0.3-0.7)", retriever_kg_default_vector),
 ]
 
 # Load existing results
