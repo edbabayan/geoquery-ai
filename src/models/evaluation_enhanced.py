@@ -27,7 +27,8 @@ from graph_retrieval_variations import (
     retriever_kg_artem_v3,
     retriever_kg_artem_v4,
     retriever_kg_default_bm25,
-    retriever_kg_default_vector
+    retriever_kg_default_vector,
+    retriever_kg_default_questions_vector
 )
 from recomendation_functions.rag_with_mrr import evaluate_rag_with_mrr
 import pandas as pd
@@ -102,6 +103,7 @@ models = [
     ("KG Artem V4 Minimal (Balanced 0.5-0.5)", retriever_kg_artem_v4),
     ("KG Default (BM25 0.7-0.3)", retriever_kg_default_bm25),
     ("KG Default (Vector 0.3-0.7)", retriever_kg_default_vector),
+    ("KG Default + Questions (Vector 0.3-0.7)", retriever_kg_default_questions_vector),
 ]
 
 # Load existing results

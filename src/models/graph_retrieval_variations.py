@@ -19,6 +19,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 # Import base components
 from retrieval_models import table_description_list_default, ground_truth_renamed
 from knowledge_graph_schema import TableKnowledgeGraph, TableNode, NodeType
+from questions_generation import result_full
 
 
 class GraphRetrieverBase:
@@ -27,7 +28,7 @@ class GraphRetrieverBase:
     def __init__(self, description_format: str = "default"):
         self.kg = TableKnowledgeGraph()
         self.description_format = description_format
-        self.sentence_model = SentenceTransformer('all-MiniLM-L6-v2')
+        self.embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
         self.table_embeddings = {}
         self._build_graph()
         
@@ -57,6 +58,12 @@ class GraphRetrieverBase:
             elif self.description_format == "artem_v4" and df is not None and i < len(df):
                 # Minimal - main purpose + insights without "Table name is"
                 description = f"Table name is {df.loc[i, 'name']}. Main business purpose is {df.loc[i, 'main_business_purpose']} Unique insights are {df.loc[i, 'unique_insights']}"
+            elif self.description_format == "default_with_questions":
+                # Default description + generated questions
+                base_description = table_desc["table_description"]
+                table_questions = result_full.get(table_name, [])
+                questions_text = " Example questions: " + " ".join(table_questions[:5]) if table_questions else ""
+                description = f"{base_description}{questions_text}"
             else:
                 description = table_desc["table_description"]
             
@@ -76,8 +83,8 @@ class GraphRetrieverBase:
             node_id = self.kg.add_table(table_node)
             
             # Generate and store embedding for the description
-            embedding = self.sentence_model.encode(description)
-            self.table_embeddings[table_name] = embedding
+            embedding = self.embeddings.embed_query(description)
+            self.table_embeddings[table_name] = np.array(embedding)
             
         # Add relationships between tables
         self._add_table_relationships()
@@ -107,7 +114,7 @@ class GraphRetrieverBase:
     def retrieve_with_embeddings(self, query: str, top_k: int = 5) -> List[Document]:
         """Retrieve using embedding similarity and graph structure"""
         # Encode query
-        query_embedding = self.sentence_model.encode(query)
+        query_embedding = np.array(self.embeddings.embed_query(query))
         
         # Calculate similarities
         similarities = {}
@@ -253,6 +260,9 @@ retriever_kg_artem_v4 = GraphRetrieverWithBM25(description_format="artem_v4", we
 retriever_kg_default_bm25 = GraphRetrieverWithBM25(description_format="default", weights=[0.7, 0.3])
 retriever_kg_default_vector = GraphRetrieverWithBM25(description_format="default", weights=[0.3, 0.7])
 
+# New: Default + Questions model (Vector emphasis as requested)
+retriever_kg_default_questions_vector = GraphRetrieverWithBM25(description_format="default_with_questions", weights=[0.3, 0.7])
+
 # Export all retrievers
 __all__ = [
     'retriever_kg_default',
@@ -262,5 +272,6 @@ __all__ = [
     'retriever_kg_artem_v4',
     'retriever_kg_default_bm25',
     'retriever_kg_default_vector',
+    'retriever_kg_default_questions_vector',
     'ground_truth_renamed'
 ]
