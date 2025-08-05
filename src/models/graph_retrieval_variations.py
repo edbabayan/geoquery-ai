@@ -64,6 +64,44 @@ class GraphRetrieverBase:
                 table_questions = result_full.get(table_name, [])
                 questions_text = " Example questions: " + " ".join(table_questions[:5]) if table_questions else ""
                 description = f"{base_description}{questions_text}"
+            elif self.description_format == "default_with_questions_columns":
+                # Default description + generated questions + column information
+                base_description = table_desc["table_description"]
+                
+                # Add column information if available
+                column_info = ""
+                if df is not None and i < len(df):
+                    columns_text = []
+                    
+                    # Add main columns if available
+                    if 'main_columns' in df.columns:
+                        main_cols = df.loc[i, 'main_columns']
+                        if pd.notna(main_cols):
+                            columns_text.append(f"Main columns: {main_cols}")
+                    
+                    # Add column descriptions if available
+                    if 'column_descriptions' in df.columns:
+                        col_desc = df.loc[i, 'column_descriptions']
+                        if pd.notna(col_desc):
+                            columns_text.append(f"Column details: {col_desc}")
+                    
+                    # Add industry terms and unique insights for context
+                    relevant_cols = ['industry_terms', 'unique_insights']
+                    for col in relevant_cols:
+                        if col in df.columns:
+                            value = df.loc[i, col]
+                            if pd.notna(value):
+                                columns_text.append(f"{col.replace('_', ' ').title()}: {value}")
+                    
+                    if columns_text:
+                        column_info = " " + " ".join(columns_text)
+                
+                # Add generated questions
+                table_questions = result_full.get(table_name, [])
+                questions_text = " Example questions: " + " ".join(table_questions[:5]) if table_questions else ""
+                
+                # Combine all information
+                description = f"{base_description}{column_info}{questions_text}"
             else:
                 description = table_desc["table_description"]
             
@@ -263,6 +301,9 @@ retriever_kg_default_vector = GraphRetrieverWithBM25(description_format="default
 # New: Default + Questions model (Vector emphasis as requested)
 retriever_kg_default_questions_vector = GraphRetrieverWithBM25(description_format="default_with_questions", weights=[0.3, 0.7])
 
+# New: Default + Questions + Columns model (Vector emphasis)
+retriever_kg_default_questions_columns_vector = GraphRetrieverWithBM25(description_format="default_with_questions_columns", weights=[0.3, 0.7])
+
 # Export all retrievers
 __all__ = [
     'retriever_kg_default',
@@ -273,5 +314,6 @@ __all__ = [
     'retriever_kg_default_bm25',
     'retriever_kg_default_vector',
     'retriever_kg_default_questions_vector',
+    'retriever_kg_default_questions_columns_vector',
     'ground_truth_renamed'
 ]

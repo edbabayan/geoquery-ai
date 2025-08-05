@@ -5,7 +5,6 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from enhanced_retrieval_models import retriever_enhanced, ground_truth_renamed
 from retrieval_models import retriever_default, retriever_artem_v1, retriever_artem_v2, retriever_artem_v3
 from advanced_retrieval_models import retriever_advanced_reranked, retriever_advanced_no_rerank
-# from advanced_retrieval_models_v2 import retriever_advanced_v2_reranked, retriever_advanced_v2_no_rerank
 from column_enhanced_retrieval_models import retriever_columns_basic, retriever_columns_bm25_emphasis, retriever_columns_vector_emphasis, retriever_columns_reranked
 from default_with_columns_retrieval import retriever_default_with_columns_bm25, retriever_default_with_columns_balanced, retriever_default_with_columns_vector
 from advanced_with_columns_retrieval import retriever_advanced_with_columns_reranked, retriever_advanced_with_columns_no_rerank
@@ -28,7 +27,16 @@ from graph_retrieval_variations import (
     retriever_kg_artem_v4,
     retriever_kg_default_bm25,
     retriever_kg_default_vector,
-    retriever_kg_default_questions_vector
+    retriever_kg_default_questions_vector,
+    retriever_kg_default_questions_columns_vector
+)
+from improved_graph_retrieval import (
+    retriever_improved_kg_step1,
+    retriever_improved_kg_step2
+)
+from improved_graph_retrieval_steps34 import (
+    retriever_improved_kg_step3,
+    retriever_improved_kg_step4
 )
 from recomendation_functions.rag_with_mrr import evaluate_rag_with_mrr
 import pandas as pd
@@ -104,6 +112,12 @@ models = [
     ("KG Default (BM25 0.7-0.3)", retriever_kg_default_bm25),
     ("KG Default (Vector 0.3-0.7)", retriever_kg_default_vector),
     ("KG Default + Questions (Vector 0.3-0.7)", retriever_kg_default_questions_vector),
+    ("KG Default + Questions + Columns (Vector 0.3-0.7)", retriever_kg_default_questions_columns_vector),
+    # Improved KG models - step by step improvements
+    ("Improved KG Step 1: Better BM25", retriever_improved_kg_step1),
+    ("Improved KG Step 2: Better BM25 + Chroma", retriever_improved_kg_step2),
+    ("Improved KG Step 3: Selective Graph Features", retriever_improved_kg_step3),
+    ("Improved KG Step 4: Hybrid Standard + Graph Rerank", retriever_improved_kg_step4),
 ]
 
 # Load existing results
