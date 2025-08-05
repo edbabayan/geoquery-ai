@@ -11,6 +11,15 @@ from default_with_columns_retrieval import retriever_default_with_columns_bm25, 
 from advanced_with_columns_retrieval import retriever_advanced_with_columns_reranked, retriever_advanced_with_columns_no_rerank
 from query_decomposition import default_composition
 from default_with_reranker import retriever_default_with_reranker
+from knowledge_graph_retrieval_models import retriever_kg_basic, retriever_kg_gpt4, retriever_kg_enhanced
+from questions_enhanced_retrieval import (
+    retriever_default_questions_balanced,
+    retriever_default_questions_bm25,
+    retriever_default_questions_vector,
+    retriever_default_columns_questions_balanced,
+    retriever_default_columns_questions_bm25,
+    retriever_default_columns_questions_vector
+)
 from recomendation_functions.rag_with_mrr import evaluate_rag_with_mrr
 import pandas as pd
 import time
@@ -64,6 +73,18 @@ models = [
     # Advanced with columns models
     ("Advanced with Columns (No Rerank)", retriever_advanced_with_columns_no_rerank),
     ("Advanced with Columns (With Rerank)", retriever_advanced_with_columns_reranked),
+    # Knowledge Graph models
+    ("Knowledge Graph Basic", retriever_kg_basic),
+    ("Knowledge Graph GPT-4", retriever_kg_gpt4),
+    ("Knowledge Graph Enhanced", retriever_kg_enhanced),
+    # Default + Questions models
+    ("Default + Questions (Balanced 0.5-0.5)", retriever_default_questions_balanced),
+    ("Default + Questions (BM25 0.7-0.3)", retriever_default_questions_bm25),
+    ("Default + Questions (Vector 0.3-0.7)", retriever_default_questions_vector),
+    # Default + Columns + Questions models
+    ("Default + Columns + Questions (Balanced 0.5-0.5)", retriever_default_columns_questions_balanced),
+    ("Default + Columns + Questions (BM25 0.7-0.3)", retriever_default_columns_questions_bm25),
+    ("Default + Columns + Questions (Vector 0.3-0.7)", retriever_default_columns_questions_vector),
 ]
 
 # Load existing results
