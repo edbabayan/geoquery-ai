@@ -5,11 +5,9 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from enhanced_retrieval_models import retriever_enhanced, ground_truth_renamed
 from retrieval_models import retriever_default, retriever_artem_v1, retriever_artem_v2, retriever_artem_v3
 from advanced_retrieval_models import retriever_advanced_reranked, retriever_advanced_no_rerank
-# from advanced_retrieval_models_v2 import retriever_advanced_v2_reranked, retriever_advanced_v2_no_rerank
 from column_enhanced_retrieval_models import retriever_columns_basic, retriever_columns_bm25_emphasis, retriever_columns_vector_emphasis, retriever_columns_reranked
 from default_with_columns_retrieval import retriever_default_with_columns_bm25, retriever_default_with_columns_balanced, retriever_default_with_columns_vector
 from advanced_with_columns_retrieval import retriever_advanced_with_columns_reranked, retriever_advanced_with_columns_no_rerank
-from query_decomposition import default_composition
 from default_with_reranker import retriever_default_with_reranker
 from knowledge_graph_retrieval_models import retriever_kg_basic, retriever_kg_gpt4, retriever_kg_enhanced
 from questions_enhanced_retrieval import (
@@ -27,7 +25,16 @@ from graph_retrieval_variations import (
     retriever_kg_artem_v3,
     retriever_kg_artem_v4,
     retriever_kg_default_bm25,
-    retriever_kg_default_vector
+    retriever_kg_default_vector,
+    retriever_kg_default_questions_vector,
+    retriever_kg_default_questions_columns_vector
+)
+from improved_graph_retrieval import (
+    retriever_improved_kg_step1,
+    retriever_improved_kg_step2
+)
+from advanced_metadata_retrieval import (
+    retriever_advanced_metadata_balanced,
 )
 from recomendation_functions.rag_with_mrr import evaluate_rag_with_mrr
 import pandas as pd
@@ -53,16 +60,12 @@ def model_already_evaluated(model_name, existing_df):
 # Use actual queries from the ground truth data
 test_data = ground_truth_renamed.to_dict('records')
 test_queries = [item['question'] for item in test_data]
-expected_tables = [item['tables'].split('.')[-1] if '.' in item['tables'] else item['tables'] 
-                   for item in test_data]
+expected_tables = [item['tables'] for item in test_data]  # Keep original format for multi-table support
 
-# Create retriever with query decomposition
-retriever_default_with_decomposition = default_composition(retriever_default)
 
 # Models to evaluate
 models = [
     ("Default Retriever", retriever_default),
-    ("Default Retriever with Decomposition", retriever_default_with_decomposition),
     ("Default Retriever with Reranker", retriever_default_with_reranker),
     ("Artem V1 Retriever", retriever_artem_v1),
     ("Artem V2 Retriever", retriever_artem_v2),
@@ -102,6 +105,13 @@ models = [
     ("KG Artem V4 Minimal (Balanced 0.5-0.5)", retriever_kg_artem_v4),
     ("KG Default (BM25 0.7-0.3)", retriever_kg_default_bm25),
     ("KG Default (Vector 0.3-0.7)", retriever_kg_default_vector),
+    ("KG Default + Questions (Vector 0.3-0.7)", retriever_kg_default_questions_vector),
+    ("KG Default + Questions + Columns (Vector 0.3-0.7)", retriever_kg_default_questions_columns_vector),
+    # Improved KG models - step by step improvements
+    ("Improved KG Step 1: Better BM25", retriever_improved_kg_step1),
+    ("Improved KG Step 2: Better BM25 + Chroma", retriever_improved_kg_step2),
+    # Advanced Metadata Models with comprehensive structure
+    ("Advanced Metadata (Balanced 0.5-0.5)", retriever_advanced_metadata_balanced),
 ]
 
 # Load existing results
